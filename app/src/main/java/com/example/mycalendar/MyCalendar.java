@@ -1,6 +1,8 @@
 package com.example.mycalendar;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.util.AttributeSet;
@@ -32,25 +34,42 @@ public class MyCalendar extends LinearLayout implements View.OnClickListener{
 
     private Calendar curDate=Calendar.getInstance();
 
+    private String displayFormat;
+
+
     public MyCalendar(Context context) {
         super(context);
     }
 
     public MyCalendar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initControl(context);
+        initControl(context,attrs);
     }
 
     public MyCalendar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initControl(context);
+        initControl(context,attrs);
     }
 
-    private  void initControl(Context context){
+    private  void initControl(Context context,AttributeSet attrs){
         bindControl(context);   //初始化数据
         bindControlEnent();     //设置绑定事件
+
+        TypedArray ta=getContext().obtainStyledAttributes(attrs,R.styleable.MyCalendar);
+        try {
+            String format=ta.getString(R.styleable.MyCalendar_dateFormat);  //属性的读取
+            displayFormat = format;
+            if  (displayFormat==null){
+                displayFormat="YYYY年MM月";   //未设定时的默认值
+            }
+        }
+        finally {
+            ta.recycle();
+        }
+
         renderCalender();       //界面渲染
     }
+
         //为两个按钮设置事件监听
     private void bindControlEnent() {
         header_left.setOnClickListener(this);
@@ -82,7 +101,7 @@ public class MyCalendar extends LinearLayout implements View.OnClickListener{
     }
 
     private void renderCalender() {
-        SimpleDateFormat sdf=new SimpleDateFormat("MMM yyyy");
+        SimpleDateFormat sdf=new SimpleDateFormat(displayFormat);
         header_date.setText(sdf.format(curDate.getTime()));
 
         List<Date> cells=new ArrayList<>();             //存日期的GridView的元素List
@@ -120,6 +139,22 @@ public class MyCalendar extends LinearLayout implements View.OnClickListener{
             Date date=getItem(position);
             int day=date.getDate();         //getDay()则返回0 1 2 3 4 5 6
             ((TextView)view).setText(String.valueOf(day));
+
+            Date now=new Date();                        //现在
+            boolean isTheSameMonth=false;
+            if (date.getMonth()==now.getMonth()){       //月份相同设为黑色否则设为灰色
+                isTheSameMonth=true;
+            }
+            if (isTheSameMonth){
+                ((Calendar_day_textview)view).setTextColor(Color.BLACK);
+            }else {
+                ((Calendar_day_textview)view).setTextColor(Color.GRAY);
+            }
+            //今天设为红色
+            if (now.getDate()==date.getDate()&&now.getMonth()==date.getMonth()&&now.getYear()==date.getYear()){
+                ((TextView)view).setTextColor(Color.RED);
+                ( (Calendar_day_textview)view).isToday=true;
+            }
             return view;
 
 

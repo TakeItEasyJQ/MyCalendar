@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MyCalendar">
+        <attr name="dateFormat" format="string"/>  //把时间格式设置成自动以attr方便在使用此控件是直接调用dateFormat属性来修改
+
+    </declare-styleable>
+</resources>

@@ -7,8 +7,11 @@
     tools:context="com.example.mycalendar.MainActivity">
 
     <com.example.mycalendar.MyCalendar
+        xmlns:MyCalendarNS="http://schemas.android.com/apk/res/com.example.mycalendar"
+        android:id="@+id/MyCalendar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        MyCalendarNS:dateFormat="YYYY年MM月">
 
     </com.example.mycalendar.MyCalendar>
 
